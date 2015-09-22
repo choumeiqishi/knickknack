@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Favorite Watch</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		h1{text-align: center; font-family: "Arial";}
+		#container{width: 400px; margin: 50px auto;}
+	</style>
+</head>
+<body>
+	<h1>My Favorite Watch</h1>
+	<div id="container">
+		<canvas id="canv" width="400" height="400"></canvas>
+	</div>
+	<script type="text/javascript">
+		var scale = 1;
+		setInterval(drawWatch,1000);
+
+		function drawWatch(){
+			var context = document.getElementById("canv").getContext("2d");
+			context.clearRect(0, 0, 400, 400);
+
+			// belt
+			context.fillStyle = "#1a1a1a";
+			context.beginPath();
+			context.fillRect(128*scale,0,144*scale,400*scale);
+			context.closePath();
+
+			// zhibo
+			context.beginPath();
+			context.fillRect(336*scale, 192*scale, 4*scale, 16*scale);
+			context.fillRect(340*scale, 184*scale, 15*scale, 32*scale);
+			context.closePath();
+
+			// circle
+			context.strokeStyle = "#333333";
+			context.beginPath();
+			context.arc(200*scale,200*scale,137*scale,Math.PI*2,false);
+			context.closePath();
+			context.fill();
+			context.stroke();
+
+			// 12 polygon
+			//context.fillStyle = "#a9d9e5";
+			context.fillStyle = "#fff";
+			context.beginPath();
+			context.moveTo(200*scale, 81*scale);
+			context.lineTo(260*scale, 97*scale);
+			context.lineTo(303*scale, 140*scale);
+			context.lineTo(319*scale, 200*scale);
+			context.lineTo(303*scale, 260*scale);
+			context.lineTo(260*scale, 303*scale);
+			context.lineTo(200*scale, 319*scale);
+			context.lineTo(140*scale, 303*scale);
+			context.lineTo(97*scale, 260*scale);
+			context.lineTo(81*scale, 200*scale);
+			context.lineTo(97*scale, 140*scale);
+			context.lineTo(140*scale, 97*scale);
+			context.closePath();
+			context.fill();
+
+			context.strokeStyle = "#1a1a1a";
+			
+			var date = new Date();
+			var hour = date.getHours();
+			var minute = date.getMinutes();
+			var second = date.getSeconds();
+
+			drawNiddle(context, hour*30-90 + Math.floor(minute/12)*6, -7*scale,-5*scale,93*scale,10*scale,5*scale,"On The Road");
+			drawNiddle(context, minute*6-90, -7*scale,-5*scale,111*scale,10*scale,5*scale);
+			drawNiddle(context, second*6-90, -7*scale,-1*scale,116*scale,2*scale);
+		}
+
+		function drawNiddle(context, value, x, y, width, height, radius, brand){
+			context.fillStyle = "#1a1a1a";
+			context.save();
+			context.translate(200*scale,200*scale);
+			context.rotate((value-1) * Math.PI/180);
+			context.beginPath();
+			context.fillRect(x,y,width,height);
+			if(radius){
+				context.arc(width+x,0,radius,Math.PI*2,false);
+			}
+			context.closePath();
+			context.fill();
+			if(brand){
+				context.font = "12px Arial";
+				context.fillStyle = "#ffffff";
+				context.scale(0.6*scale,0.6*scale);
+				context.beginPath();
+				context.fillText(brand, 40, 3);
+				context.closePath();
+			}
+			context.restore();
+		}
+	</script>
+</body>
+</html>
+
