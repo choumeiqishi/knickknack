@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>贷款计算器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        #resultContainer { display: none; }
+        body { padding: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h4>贷款计算器</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label">贷款初始总额</label>               
+                        <input type="number" id="totalLoanInput" class="form-control input-sm" value="788485.76">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">每月偿还金额</label>
+                        <input type="number" id="monthReturnInput" class="form-control input-sm" value="5000">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">基准年利率</label>
+                        <input type="number" id="yearRateInput" class="form-control input-sm" value="0.0425">
+                    </div>
+                    <div class="form-group">
+                        <button id="calcBtn" type="button" class="btn btn-primary btn-sm col-sm-12">计算</button>
+                    </div>
+                </form>
+            </div>
+    	</div>
+        <div class="row">
+            <table id="resultContainer" class="table table-striped table-hover">
+                <caption>还款明细表</caption>
+                <thead>
+                    <tr>
+                        <th>月数</th>
+                        <th>该月偿还本金</th>
+                        <th>该月偿还利息</th>
+                        <th>剩余贷款额</th>
+                        <th>利息累计</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('#calcBtn').click(function(event) {
+            var totalLoan = parseInt($('#totalLoanInput').val());
+            var monthReturn = parseInt($('#monthReturnInput').val());
+            var yearRate = parseFloat($('#yearRateInput').val());
+            var monthInterest = 0;
+            var monthRealReturn = 0;
+            var month = 0;
+            var totalInterest = 0;
+
+            var tbodyHTML = '';
+            while(totalLoan > monthReturn){
+                console.log(totalLoan + ', ' + monthReturn);
+                monthInterest = totalLoan * yearRate / 12;
+                if(monthReturn > monthInterest){
+                    monthRealReturn = monthReturn - monthInterest;
+                }else{
+                    alert("每月偿还金额小于每月利息 " + monthInterest + "，请重新设置");
+                    return;
+                }
+                totalLoan -= monthRealReturn;
+                totalInterest += monthInterest;
+                month += 1;
+                
+                tbodyHTML += '<tr>';
+                tbodyHTML += '<td>' + month + '</td>';
+                tbodyHTML += '<td>' + monthRealReturn + '</td>';
+                tbodyHTML += '<td>' + monthInterest + '</td>';
+                tbodyHTML += '<td>' + totalLoan + '</td>';
+                tbodyHTML += '<td>' + totalInterest + '</td>';
+                tbodyHTML += '</tr>';
+                //$('#resultContainer').append('<p>' + month + ': ' + monthRealReturn + ', ' + monthInterest + ', ' +  totalLoan +'</p>');
+                
+            }
+            $('#resultContainer tbody').html(tbodyHTML);
+            $('#resultContainer').show();
+        });
+    </script>
+</body>
+</html>
